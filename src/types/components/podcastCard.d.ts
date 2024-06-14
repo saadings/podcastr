@@ -1,5 +1,5 @@
 interface IProductCardProps {
-  id: number;
+  id: Id<"podcasts">;
   title: string;
   description: string;
   imgURL: string;

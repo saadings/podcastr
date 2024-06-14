@@ -1,35 +1,37 @@
 "use client";
-import { api } from "@/_generated/api";
-import { generateUploadUrl } from "@/files";
+import { useState } from "react";
 import { useAction, useMutation } from "convex/react";
 import { useUploadFiles } from "@xixixao/uploadstuff/react";
+import { api } from "@/_generated/api";
+
 import { useToast } from "@/components/ui/use-toast";
 
 const useGeneratePodcast = ({
+  voice,
+  prompt,
   setAudio,
   setAudioStorageId,
-  voicePrompt,
-  voiceType,
-}: any) => {
+}: IGeneratePodcastProps) => {
   const { toast } = useToast();
-
+  const [isGenerating, setIsGenerating] = useState(false);
   const getPodcastAudio = useAction(api.openAi.generateAudioAction);
 
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-
   const getAudioUrl = useMutation(api.podcasts.getUrl);
 
   const { startUpload } = useUploadFiles(generateUploadUrl);
 
   const generatePodcast = async () => {
-    if (!voicePrompt) {
+    if (!prompt) {
       return;
     }
 
+    setIsGenerating(true);
+
     try {
       const response = await getPodcastAudio({
-        input: voicePrompt,
-        voice: voiceType,
+        input: prompt,
+        voice: voice,
       });
 
       const blob = new Blob([response], { type: "audio/mpeg" });
@@ -60,11 +62,13 @@ const useGeneratePodcast = ({
             ? error.message
             : "There was an error generating your podcast",
       });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
   return {
-    isGenerating: false,
+    isGenerating,
     generatePodcast,
   };
 };

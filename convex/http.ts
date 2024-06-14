@@ -1,6 +1,6 @@
-import type { WebhookEvent } from "@clerk/nextjs/server";
-import { httpRouter } from "convex/server";
 import { Webhook } from "svix";
+import { httpRouter } from "convex/server";
+import type { WebhookEvent } from "@clerk/nextjs/server";
 
 import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
@@ -52,9 +52,11 @@ const validateRequest = async (
 ): Promise<WebhookEvent | undefined> => {
   // key note : add the webhook secret variable to the environment variables field in convex dashboard setting
   const webhookSecret = process.env.CLERK_WEBHOOK_SECRET!;
+
   if (!webhookSecret) {
     throw new Error("CLERK_WEBHOOK_SECRET is not defined");
   }
+
   const payloadString = await req.text();
   const headerPayload = req.headers;
   const svixHeaders = {

@@ -1,9 +1,10 @@
-import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { defineSchema, defineTable } from "convex/server";
 
 export default defineSchema({
   podcasts: defineTable({
     user: v.id("users"),
+
     podcastTitle: v.string(),
     podcastDescription: v.string(),
 
@@ -21,6 +22,7 @@ export default defineSchema({
     imagePrompt: v.string(),
     voiceType: v.string(),
     audioDuration: v.number(),
+
     views: v.number(),
   })
     .searchIndex("search_author", {
