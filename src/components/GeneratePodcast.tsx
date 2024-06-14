@@ -62,11 +62,7 @@ const GeneratePodcast = ({
           className="text-16 bg-orange-1 py-4 font-extrabold text-white-1"
           onClick={generatePodcast}
           disabled={
-            voice === "" ||
-            prompt === "" ||
-            prompt.length < 10 ||
-            prompt.length > 2000 ||
-            isGenerating
+            voice === "" || prompt === "" || prompt.length < 10 || isGenerating
           }
         >
           {isGenerating ? (

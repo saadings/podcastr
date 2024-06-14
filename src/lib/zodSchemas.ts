@@ -13,14 +13,9 @@ export const createPodcastFormSchema = z.object({
   podcastDescription: z.string().min(10, {
     message: "Podcast Description must be at least 10 characters.",
   }),
-  voicePrompt: z
-    .string()
-    .min(2, {
-      message: "Please Generate Podcast Prompt.",
-    })
-    .max(2000, {
-      message: "Podcast Prompt must be less than 500 characters.",
-    }),
+  voicePrompt: z.string().min(2, {
+    message: "Please Generate Podcast Prompt.",
+  }),
   audioUrl: z.string().min(2, {
     message: "Please Generate Podcast Audio.",
   }),
