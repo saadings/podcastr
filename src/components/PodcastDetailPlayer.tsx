@@ -10,6 +10,7 @@ import LoaderSpinner from "./LoaderSpinner";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 import { useAudio } from "@/providers/AudioProvider";
+import Link from "next/link";
 
 const PodcastDetailPlayer = ({
   audioUrl,
@@ -55,6 +56,27 @@ const PodcastDetailPlayer = ({
     });
   };
 
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(audioUrl!);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${podcastTitle}.mp3`; // You can change the extension based on the actual file type
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading podcast", error);
+      toast({
+        title: "Error downloading podcast",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (!imageUrl || !authorImageUrl) return <LoaderSpinner />;
 
   return (
@@ -89,18 +111,33 @@ const PodcastDetailPlayer = ({
             </figure>
           </article>
 
-          <Button
-            onClick={handlePlay}
-            className="text-16 w-full max-w-[250px] bg-orange-1 font-extrabold text-white-1"
-          >
-            <Image
-              src="/icons/Play.svg"
-              width={20}
-              height={20}
-              alt="random play"
-            />{" "}
-            &nbsp; Play podcast
-          </Button>
+          <div className="space-y-4">
+            <Button
+              onClick={handlePlay}
+              className="text-16 w-full max-w-[250px] bg-orange-1 font-extrabold text-white-1"
+            >
+              <Image
+                src="/icons/Play.svg"
+                width={20}
+                height={20}
+                alt="random play"
+              />{" "}
+              &nbsp; Play Podcast
+            </Button>
+
+            <Button
+              onClick={handleDownload}
+              className="text-16 bg-blue-1 w-full max-w-[250px] border font-extrabold text-white-1"
+            >
+              <Image
+                src="/icons/download.svg"
+                width={20}
+                height={20}
+                alt="download icon"
+              />{" "}
+              &nbsp; Download Podcast
+            </Button>
+          </div>
         </div>
       </div>
       {isOwner && (
